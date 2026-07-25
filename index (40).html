@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verdex — Microplastic sampling on Long Island</title>
+<meta name="description" content="Verdex is a student-run sampling effort recording microplastic particle counts in Long Island’s coastal waters under a published, version-locked protocol.">
+<meta property="og:title" content="Verdex — Microplastic counts from Long Island’s south shore">
+<meta property="og:description" content="Student-run microplastic sampling under a published, version-locked protocol. Every session logged, blanks included.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://verdexdata.org">
+<meta property="og:image" content="https://verdexdata.org/hero-1.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="verdex-mark-64.png">
+<link rel="apple-touch-icon" href="verdex-mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   VERDEX v1.0
+   Palette locked: ink #0a1219 · paper #faf7f2 · accent #c9a45c
+   Slate #7d99b8 is sampled from the Verdex mark background.
+   ============================================================ */
+:root{
+  --ink:#0a1219;
+  --ink-80:#1d2a35;
+  --body:#3d4a55;
+  --muted:#6c7a86;
+  --paper:#faf7f2;
+  --paper-2:#f2ede4;
+  --rule:#ddd5c8;
+  --accent:#c9a45c;
+  --slate:#7d99b8;
+  --max:1120px;
+  --pad:clamp(20px,5vw,64px);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+body{
+  margin:0;background:var(--paper);color:var(--body);
+  font-family:var(--sans);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+@media (max-width:600px){body{font-size:16px;line-height:1.58}}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--serif);color:var(--ink);margin:0;line-height:1.08;letter-spacing:-.015em;font-weight:600}
+h1{font-size:clamp(2.4rem,7.5vw,4.6rem)}
+h2{font-size:clamp(1.65rem,5.4vw,3rem)}
+h3{font-size:clamp(1.12rem,2.4vw,1.35rem);line-height:1.25}
+p{margin:0 0 1.05em}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{
+  font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 .9rem;display:block;
+}
+.lede{font-size:clamp(.98rem,2vw,1.18rem);color:var(--ink-80);max-width:56ch}
+.section{padding:clamp(56px,9vw,110px) 0;border-top:1px solid var(--rule)}
+.section--dark{background:var(--ink);border-top:none;color:#b7c3cd}
+.section--dark h2,.section--dark h3{color:var(--paper)}
+.section--tint{background:var(--paper-2)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:12px;top:12px;z-index:99;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:4px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- header ---------- */
+.hdr{
+  position:sticky;top:0;z-index:50;background:rgba(250,247,242,.92);
+  backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--rule);
+}
+.hdr__in{max-width:var(--max);margin:0 auto;padding:10px var(--pad);
+  display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;min-height:44px}
+.brand img{width:40px;height:40px;border-radius:0}
+.brand b{font-family:var(--serif);font-size:1.24rem;font-weight:600;color:var(--ink);letter-spacing:-.02em}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)}
+.nav a{
+  text-decoration:none;font-size:.9rem;font-weight:500;color:var(--body);
+  padding:6px 0;border-bottom:1.5px solid transparent;
+}
+.nav a:hover{color:var(--ink);border-bottom-color:var(--accent)}
+.burger{display:none;width:44px;height:44px;border:1px solid var(--rule);background:none;
+  border-radius:8px;cursor:pointer;align-items:center;justify-content:center}
+.burger span{display:block;width:18px;height:1.5px;background:var(--ink);position:relative}
+.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:18px;height:1.5px;background:var(--ink)}
+.burger span::before{top:-6px}.burger span::after{top:6px}
+@media (max-width:820px){
+  .burger{display:flex}
+  .nav{
+    position:fixed;inset:57px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;
+    background:var(--paper);border-bottom:1px solid var(--rule);padding:6px var(--pad) 18px;
+    display:none;max-height:calc(100dvh - 57px);overflow:auto;
+  }
+  .nav.open{display:flex}
+  .nav a{padding:14px 2px;border-bottom:1px solid var(--rule);font-size:1.04rem}
+  .nav a:last-child{border-bottom:0}
+}
+
+/* ---------- hero ---------- */
+.hero{position:relative;width:100%;min-height:clamp(520px,70svh,720px);display:flex;
+  flex-direction:column;justify-content:flex-end;
+  background:var(--ink);overflow:hidden;isolation:isolate}
+@media (max-width:820px){.hero{min-height:clamp(500px,72svh,700px)}}
+.hero__slides{position:absolute;inset:0;z-index:-2}
+.hero__slide{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
+.hero__slide.is-on{opacity:1}
+.hero__slide img{width:100%;height:100%;object-fit:cover;object-position:center 32%;color:transparent;font-size:0}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:
+    linear-gradient(180deg,rgba(10,18,25,.42) 0%,rgba(10,18,25,.38) 26%,rgba(10,18,25,.74) 62%,rgba(10,18,25,.95) 100%),
+    linear-gradient(90deg,rgba(10,18,25,.82) 0%,rgba(10,18,25,.55) 46%,rgba(10,18,25,.10) 78%)}
+@media (max-width:820px){
+  .hero::after{background:linear-gradient(180deg,rgba(10,18,25,.55) 0%,rgba(10,18,25,.62) 30%,rgba(10,18,25,.88) 70%,rgba(10,18,25,.97) 100%)}
+}
+.hero__in{max-width:var(--max);margin:0 auto;padding:clamp(80px,12vh,140px) var(--pad) clamp(26px,4vw,48px);width:100%;flex:1 1 auto;display:flex;flex-direction:column;justify-content:flex-end}
+@media (max-width:820px){
+  .hero__in{padding:clamp(56px,9vh,90px) var(--pad) clamp(20px,4vw,30px)}
+  .hero h1{max-width:none}
+  .hero p{max-width:none}
+}
+.hero h1{color:#fff;max-width:18ch;text-wrap:balance;font-size:clamp(2rem,6.5vw,4.4rem);text-shadow:0 2px 18px rgba(6,12,18,.55)}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero p{color:#e8eef4;max-width:46ch;margin:1.1rem 0 1.9rem;font-size:clamp(1rem,2vw,1.15rem);text-shadow:0 1px 12px rgba(6,12,18,.6)}
+.hero .eyebrow{color:#efdcb4;text-shadow:0 1px 10px rgba(6,12,18,.6)}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+@media (max-width:420px){.btn{flex:1 1 100%}}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+  padding:0 24px;border-radius:2px;text-decoration:none;font-weight:600;font-size:.94rem;
+  border:1px solid transparent;transition:transform .15s ease,background .15s ease;
+}
+.btn--solid{background:var(--accent);color:#14202b}
+.btn--solid:hover{background:#d9b673}
+.btn--ghost{border-color:rgba(255,255,255,.45);color:#fff}
+.btn--ghost:hover{background:rgba(255,255,255,.1)}
+.btn--ink{background:var(--ink);color:var(--paper)}
+.btn--line{border-color:var(--ink);color:var(--ink)}
+.hero__bar{
+  position:relative;z-index:2;border-top:1px solid rgba(255,255,255,.18);
+  background:rgba(10,18,25,.5);
+}
+.hero__bar{flex:0 0 auto;width:100%}
+.hero__bar-in{max-width:var(--max);margin:0 auto;padding:11px var(--pad);
+  display:flex;align-items:center;justify-content:space-between;gap:14px}
+@media (max-width:600px){.hero__bar-in{padding:10px var(--pad)}
+  .hero__cap{font-size:.62rem;letter-spacing:.05em;line-height:1.35;flex:1 1 auto}
+  .dots button{width:18px;height:26px}}
+@media (max-width:600px){.hero__cap{font-size:.64rem;letter-spacing:.05em;flex:1 1 auto}}
+.hero__cap{font-size:.74rem;letter-spacing:.11em;text-transform:uppercase;color:#c3ceda;
+  font-weight:500;min-height:1.2em}
+.dots{display:flex;gap:8px;flex:0 0 auto}
+.dots button{width:22px;height:22px;padding:0;border:0;background:none;cursor:pointer;
+  display:grid;place-items:center}
+.dots button::after{content:"";width:100%;height:2px;background:rgba(255,255,255,.3)}
+.dots button[aria-current="true"]::after{background:var(--accent)}
+
+/* ---------- ledger ---------- */
+.ledger{border-top:2px solid var(--ink)}
+.ledger__row{
+  display:grid;grid-template-columns:auto 1fr;gap:4px 22px;
+  padding:22px 0;border-bottom:1px solid var(--rule);align-items:start;
+}
+.ledger__id{font-family:var(--serif);font-size:1.5rem;color:var(--ink);font-weight:600;
+  font-variant-numeric:tabular-nums;grid-row:span 2}
+.ledger__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px}
+.ledger__site{font-weight:600;color:var(--ink);font-size:1.05rem}
+.ledger__date{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{
+  font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border:1px solid var(--rule);border-radius:999px;color:var(--muted);white-space:nowrap;
+}
+.tag--done{border-color:var(--accent);color:#8a6d2b;background:#f7efdd}
+.stats{display:flex;flex-wrap:wrap;gap:14px 28px;margin-top:12px}
+.stat{min-width:96px}
+.stat b{display:block;font-family:var(--serif);font-size:1.7rem;color:var(--ink);
+  font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat b.na{color:var(--muted);font-size:1.35rem}
+.ledger__toggle{display:flex;width:100%;align-items:flex-start;justify-content:space-between;gap:14px;
+  background:none;border:0;padding:6px 0;cursor:pointer;text-align:left;font:inherit;color:inherit;min-height:44px}
+.ledger__toggle:hover .ledger__site{color:var(--accent)}
+.ledger__chev{flex:0 0 auto;width:11px;height:11px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(45deg);transition:transform .25s ease;margin:6px 2px 0 0}
+.ledger__toggle[aria-expanded="true"] .ledger__chev{transform:rotate(-135deg)}
+.ledger__body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.ledger__body.is-open{grid-template-rows:1fr}
+.ledger__inner{overflow:hidden;min-height:0}
+.ledger__body.is-open .ledger__inner{padding-top:4px}
+.ledger__note{margin:10px 0 0;font-size:.93rem;color:var(--body);max-width:62ch}
+.empty{padding:34px 0;color:var(--muted)}
+@media (max-width:600px){
+  .ledger__row{grid-template-columns:1fr;gap:4px;padding:18px 0}
+  .ledger__id{grid-row:auto;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+    font-family:var(--sans);font-weight:600;color:var(--muted)}
+  .ledger__site{font-size:1.02rem}
+  .stat{min-width:78px}
+  .stat b{font-size:1.4rem}
+  .ledger__note{font-size:.9rem}
+}
+
+/* ---------- grids ---------- */
+.grid{display:grid;gap:clamp(20px,3vw,34px)}
+.grid--2{grid-template-columns:repeat(2,1fr)}
+.grid--3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:860px){.grid--3{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.grid--2,.grid--3{grid-template-columns:1fr}}
+.step{border-top:1px solid var(--rule);padding-top:18px}
+.step__n{font-family:var(--serif);font-size:.9rem;color:var(--accent);font-weight:700;
+  letter-spacing:.1em;display:block;margin-bottom:8px}
+.step p{margin:.6rem 0 0;font-size:.95rem}
+.card{background:var(--paper);border:1px solid var(--rule);padding:clamp(20px,3vw,28px)}
+.section--dark .card{background:#111d27;border-color:#22323f}
+.card p{margin:.55rem 0 0;font-size:.95rem}
+.card p:last-child{margin-bottom:0}
+
+/* ---------- disclosure ---------- */
+.disclose{border-left:3px solid var(--accent);padding:2px 0 2px clamp(14px,3vw,26px);max-width:70ch}
+.disclose h3{margin-bottom:.5rem}
+
+/* ---------- review table ---------- */
+.review{width:100%;border-collapse:collapse;font-size:.95rem}
+.review th,.review td{text-align:left;padding:14px 12px 14px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.review th{font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.review td:first-child{color:var(--ink);font-weight:600}
+@media (max-width:640px){
+  .review,.review tbody,.review tr,.review td{display:block;width:100%}
+  .review thead{display:none}
+  .review tr{border-bottom:1px solid var(--rule);padding:14px 0}
+  .review td{border:0;padding:2px 0}
+  .review td[data-l]::before{content:attr(data-l) " — ";color:var(--muted);font-size:.78rem;
+    letter-spacing:.08em;text-transform:uppercase}
+}
+
+/* ---------- team ---------- */
+.person{border-top:1px solid var(--rule);padding-top:16px}
+.person h3{margin-bottom:2px}
+.person .role{font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);
+  font-weight:600;display:block;margin-bottom:.7rem}
+.person p{font-size:.94rem;margin:0}
+.roster{margin-top:clamp(28px,4vw,42px);border-top:1px solid var(--rule);padding-top:20px}
+.roster ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px 10px;margin:12px 0 0;padding:0}
+.roster li{border:1px solid var(--rule);padding:7px 14px;border-radius:999px;font-size:.92rem;color:var(--ink)}
+
+/* ---------- gallery ---------- */
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gal figure{margin:0;display:flex;flex-direction:column}
+.gal img{display:block;width:100%;height:clamp(150px,15vw,215px);object-fit:cover;object-position:center 38%}
+.gal figcaption{font-size:.74rem;color:var(--muted);margin-top:8px;letter-spacing:.02em;line-height:1.4}
+@media (max-width:860px){.gal{grid-template-columns:1fr 1fr}.gal img{height:clamp(150px,26vw,200px)}}
+@media (max-width:520px){.gal{grid-template-columns:1fr;gap:18px}.gal img{height:210px}}
+
+/* ---------- contact / footer ---------- */
+.contact a.mail{font-family:var(--serif);font-size:clamp(1.3rem,4vw,2.1rem);color:var(--paper);
+  text-decoration:none;border-bottom:1px solid rgba(201,164,92,.55);word-break:break-word}
+.contact a.mail:hover{border-bottom-color:var(--accent)}
+.foot{background:var(--ink);color:#7d8b97;font-size:.83rem;padding:34px 0 46px;border-top:1px solid #1e2b36}
+.foot__in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+@media (max-width:600px){.foot__in{flex-direction:column;align-items:flex-start;gap:12px}}
+.foot p{margin:0;max-width:78ch;line-height:1.55}
+.foot a{color:#b7c3cd}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="#top"><img src="verdex-mark-180.png" alt="Verdex" width="40" height="40"><b>Verdex</b></a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span></button>
+    <nav class="nav" id="nav">
+      <a href="#record">Record</a>
+      <a href="#method">Method</a>
+      <a href="#review">Review</a>
+      <a href="#team">Team</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero__slides" id="slides" aria-hidden="true"></div>
+  <div class="hero__in">
+    <span class="eyebrow">South Shore, Long Island · Pilot</span>
+    <h1>Microplastic counts from Long Island&#8217;s <em>south shore.</em></h1>
+    <p>Verdex is a student-run sampling effort. We record microplastic particle counts in Long Island&#8217;s coastal waters under a published, version-locked protocol.</p>
+    <div class="btns">
+      <a class="btn btn--solid" href="#record">See the session record</a>
+      <a class="btn btn--ghost" href="#method">How we sample</a>
+    </div>
+  </div>
+  <div class="hero__bar">
+    <div class="hero__bar-in">
+      <span class="hero__cap" id="cap"></span>
+      <div class="dots" id="dots" role="tablist" aria-label="Field photographs"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RECORD ============ -->
+<section class="section" id="record">
+  <div class="wrap">
+    <span class="eyebrow">The record</span>
+    <h2>Every session, logged.</h2>
+    <p class="lede" style="margin-top:1rem">Sessions appear here whether the counts are interesting or not. Blank results and zero counts stay in the record — removing them would make the dataset a highlight reel.</p>
+    <div class="ledger" id="ledger" style="margin-top:clamp(30px,4vw,46px)"></div>
+  </div>
+</section>
+
+<!-- ============ METHOD ============ -->
+<section class="section section--tint" id="method">
+  <div class="wrap">
+    <span class="eyebrow">Method · VSS Protocol v1.1</span>
+    <h2>One protocol, version-locked.</h2>
+    <p class="lede" style="margin-top:1rem">The Verdex Sampling Standard (VSS) v1.1 is adapted from NOAA marine-debris monitoring guidance. It was locked before Session 1 so that sessions stay comparable to one another.</p>
+    <div class="grid grid--2" style="margin-top:clamp(34px,4vw,52px)">
+      <div class="step"><span class="step__n">Step 01</span><h3>Collect</h3>
+        <p>Surface grab samples in pre-rinsed glass jars, rinsed three times in source water before filling. Nitrile gloves throughout. Site, time, tide stage, and weather recorded on the field sheet at the moment of collection.</p></div>
+      <div class="step"><span class="step__n">Step 02</span><h3>Blank</h3>
+        <p>A procedural blank is opened and handled alongside the real samples at every session from Session 1 forward. If the blank is dirty, the session's counts are reported with that blank value attached — never quietly dropped.</p></div>
+      <div class="step"><span class="step__n">Step 03</span><h3>Filter</h3>
+        <p>Samples are vacuum-filtered onto a 100 µm mesh in a covered workspace with foil-lined trays, then dried before examination.</p></div>
+      <div class="step"><span class="step__n">Step 04</span><h3>Count</h3>
+        <p>Particles are counted and typed as fiber, fragment, or bead under an Accu-Scope EXS-210-13 stereo microscope, with a hot-needle check on ambiguous particles. Counts and photos are entered into the Verdex sheet the same day.</p></div>
+    
+    <div class="disclose" style="margin-top:clamp(40px,5vw,60px)">
+      <h3>Single-team disclosure</h3>
+      <p style="font-size:.95rem">All samples to date were collected, processed, and counted by one team using one protocol. No independent laboratory has re-counted a Verdex sample, and inter-observer agreement has not yet been quantified. Counts are visual identifications, not polymer confirmations.</p>
+      <p style="font-size:.95rem;margin-top:.9rem">Verdex will not recruit additional teams or sites until it has completed six consecutive protocol-compliant sessions and closed at least one external methodology review.</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============ LIMITS ============ -->
+
+
+<!-- ============ REVIEW ============ -->
+<section class="section" id="review">
+  <div class="wrap">
+    <span class="eyebrow">Outside review</span>
+    <h2>Where the protocol stands.</h2>
+    <p class="lede" style="margin-top:1rem">Status is reported exactly as it is. Nothing on this page claims an endorsement, a partnership, or a use of Verdex data that hasn't happened.</p>
+    <table class="review" style="margin-top:clamp(26px,3vw,40px)">
+      <thead><tr><th>Name</th><th>Affiliation</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td data-l="Name">Dr. Luis Medina Faull</td>
+          <td data-l="Affiliation">School of Marine and Atmospheric Sciences, Stony Brook University</td>
+          <td data-l="Status">Methodology review in progress · VSS v1.1 sent July 16, 2026</td>
+        </tr>
+        <tr>
+          <td data-l="Name">Cassidy Freudenberg</td>
+          <td data-l="Affiliation">Conservation and Waterways, Town of Hempstead</td>
+          <td data-l="Status">Methodology review in progress · VSS v1.1 sent July 17, 2026</td>
+        </tr>
+        <tr>
+          <td data-l="Name">Office of NY State Senator Steven D. Rhoads (SD-5)</td>
+          <td data-l="Affiliation">Sandra VonRunnen, Director of Constituent Affairs</td>
+          <td data-l="Status">Met with founder June 17, 2026</td>
+        </tr>
+        <tr>
+          <td data-l="Name">Office of NY State Assemblyman David G. McDonough (AD-14)</td>
+          <td data-l="Affiliation">Vicky Johnson, Director of Constituent Affairs</td>
+          <td data-l="Status">Correspondence ongoing since May 2026</td>
+        </tr>
+        <tr>
+          <td data-l="Name">Dr. Jaymie Meliker</td>
+          <td data-l="Affiliation">Program in Public Health, Stony Brook University</td>
+          <td data-l="Status">Research mentor to the founder</td>
+        </tr>
+        <tr>
+          <td data-l="Name">Aiden Tran</td>
+          <td data-l="Affiliation">Verdex — internal methodology review</td>
+          <td data-l="Status">Contributed source-water rinse, foil liner, and tide/weather fields to VSS v1.1</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:26px;font-size:.9rem;color:var(--muted);max-width:64ch">No organisation listed above has used, endorsed, or cited Verdex data. Review in progress means a document was sent and receipt was confirmed. Nothing more is claimed until there is a receipt for it.</p>
+  </div>
+</section>
+
+<!-- ============ TEAM ============ -->
+<section class="section section--tint" id="team">
+  <div class="wrap">
+    <span class="eyebrow">Team</span>
+    <h2>Who runs Verdex.</h2>
+    <p class="lede" style="margin-top:1rem">Verdex is an independent student project based in Bellmore, New York. It is not affiliated with, sponsored by, or representative of any school or district.</p>
+    <div class="grid grid--3" style="margin-top:clamp(30px,4vw,46px)">
+      <div class="person"><h3>Joshua Sat</h3><span class="role">Founder</span>
+        <p>Authored the VSS Protocol. Leads project strategy, stakeholder outreach, and data operations.</p></div>
+      <div class="person"><h3>Aiden Tran</h3><span class="role">Field Operations Lead</span>
+        <p>Runs field execution and reviews methodology. Background in environmental science across birds, water, and soils.</p></div>
+      <div class="person"><h3>Chloe Pan</h3><span class="role">Communications &amp; Outreach Lead</span>
+        <p>Leads volunteer coordination, recruiting, and outreach infrastructure. Contributed to succession planning.</p></div>
+    </div>
+    <div class="roster">
+      <span class="eyebrow" style="margin-bottom:.3rem">Sampling team</span>
+      <p style="font-size:.93rem;margin:0;color:var(--body)">Volunteers who rotate through field sessions. Named credit follows documented per-session contribution.</p>
+      <ul>
+        <li>Antonio Terzulli</li>
+        <li>Liam Sullivan</li>
+        <li>Olivia Torres</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Field record</span>
+    <h2>From the water to the scope.</h2>
+    <div class="gal" style="margin-top:clamp(26px,3vw,40px)">
+      <figure><img src="gal-1.jpg" alt="Filling a pre-rinsed jar at ankle depth" loading="lazy"><figcaption>Filling a pre-rinsed jar at ankle depth</figcaption></figure>
+      <figure><img src="gal-2.jpg" alt="Collecting paired samples at the shoreline" loading="lazy"><figcaption>Collecting paired samples at the shoreline</figcaption></figure>
+      <figure><img src="gal-3.jpg" alt="Counting particles under the microscope" loading="lazy"><figcaption>Counting particles under the microscope</figcaption></figure>
+      <figure><img src="gal-4.jpg" alt="The sampling site at Wantagh Park" loading="lazy"><figcaption>The sampling site at Wantagh Park</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section section--dark contact" id="contact">
+  <div class="wrap">
+    <span class="eyebrow">Contact</span>
+    <h2>Want the raw data?</h2>
+    <p class="lede" style="margin-top:1rem;color:#b7c3cd;max-width:52ch">Session sheets, the full VSS v1.1 protocol document, and blank results are available on request to researchers, agencies, and educators.</p>
+    <p style="margin-top:1.6rem"><a class="mail" href="mailto:joshua@verdexdata.org">joshua@verdexdata.org</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <p>© 2026 Verdex · Bellmore, New York. An independent student project. Verdex data is collected for educational and monitoring purposes and is not a substitute for accredited laboratory analysis.</p>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================================
+   ▼▼▼ EDIT YOUR DATA HERE — THIS IS THE ONLY PLACE ▼▼▼
+   Add a new session by copying one { ... } block and changing the values.
+   Newest session goes at the TOP of the list.
+
+   count / fibers / fragments / beads / blank  →  use a NUMBER once counted,
+                                                  or null while it's pending.
+   status  →  "complete"  (shows a gold tag)  or  "processing"
+   ========================================================================== */
+const SESSIONS = [
+  {
+    id: "Session 1",
+    date: "Collected July 12, 2026",
+    site: "Wantagh Park, Nassau County",
+    protocol: "VSS v1.1",
+    samples: 10,
+    count: 48,
+    fibers: 37,
+    fragments: 2,
+    beads: 4,
+    foam: 3,
+    film: 2,
+    blank: 2,
+    status: "complete",
+    note: "First session under the full VSS v1.1 blank suite. Blank event totals: 1 field blank (2 particles), 1 field duplicate (0), 1 reagent blank (0), 9 sieve carry-over blanks (mean 0.0), 2 airborne controls (0). No blank threshold was exceeded. One sample, S3, returned 16 particles against a session median of 3 \u2014 more than the 3\u00d7 variance limit in VSS \u00a78.4 \u2014 and is flagged and scheduled for a return-visit re-sample. It remains in the dataset and in the totals above; removing it would move the mean from 4.8 to 3.6 and leave the median unchanged at 3. A single sieve rinse between samples used tap water before an immediate excess-distilled rinse; the carry-over blank for that transition returned zero. Processed July 19, 2026."
+  },
+  {
+    id: "Session 0",
+    date: "Collected June 13, 2026",
+    site: "Wantagh Park, Nassau County",
+    protocol: "VSS v1.0 pilot",
+    samples: 2,
+    count: 13,
+    fibers: 3,
+    fragments: 2,
+    beads: 0,
+    foam: 3,
+    film: 5,
+    blank: 0,
+    status: "complete",
+    note: "Pilot session run under v1.0 before the protocol was locked. Paired replicates split 8 and 5 particles \u2014 a 1.6\u00d7 spread, inside the 3\u00d7 variance threshold VSS flags at. Field blank came back clean at zero. Two foams in the second replicate were recovered on a final aggregation-dispersal pass. Because v1.0 carried only a field blank and none of the lab-side controls, these counts are not directly comparable to Session 1 onward. Processed June 29, 2026."
+  }
+];
+/* ▲▲▲ STOP EDITING HERE ▲▲▲ ================================================ */
+
+/* ---- render the ledger ---- */
+(function(){
+  const el = document.getElementById('ledger');
+  if(!SESSIONS.length){
+    el.innerHTML = '<p class="empty">No sessions logged yet. The first entry appears here once counting is complete.</p>';
+    return;
+  }
+  const num = v => (v === null || v === undefined) ? '<b class="na">—</b>' : '<b>'+v+'</b>';
+  el.innerHTML = SESSIONS.map((s,i) => {
+    const done = s.status === 'complete';
+    const stats = [
+      ['Particles', s.count], ['Samples', s.samples], ['Fibers', s.fibers],
+      ['Fragments', s.fragments], ['Pellets', s.beads], ['Foam', s.foam],
+      ['Film', s.film], ['Blank', s.blank]
+    ].filter(p => p[1] !== null && p[1] !== undefined || p[0] === 'Particles' || p[0] === 'Blank')
+     .map(p => '<div class="stat">'+num(p[1])+'<span>'+p[0]+'</span></div>').join('');
+    const bodyId = 'sess-body-'+i;
+    return '<div class="ledger__row">'
+      + '<div class="ledger__id">'+s.id+'</div>'
+      + '<div>'
+      +   '<button class="ledger__toggle" aria-expanded="'+(i===0?'true':'false')+'" aria-controls="'+bodyId+'">'
+      +     '<span class="ledger__head">'
+      +       '<span class="ledger__site">'+s.site+'</span>'
+      +       '<span class="ledger__date">'+s.date+'</span>'
+      +       '<span class="tag'+(done?' tag--done':'')+'">'+(done?'Counted':'In processing')+'</span>'
+      +       (s.protocol ? '<span class="tag">'+s.protocol+'</span>' : '')
+      +     '</span>'
+      +     '<span class="ledger__chev" aria-hidden="true"></span>'
+      +   '</button>'
+      +   '<div class="ledger__body'+(i===0?' is-open':'')+'" id="'+bodyId+'">'
+      +     '<div class="ledger__inner">'
+      +       '<div class="stats">'+stats+'</div>'
+      +       (s.note ? '<p class="ledger__note">'+s.note+'</p>' : '')
+      +     '</div>'
+      +   '</div>'
+      + '</div></div>';
+  }).join('');
+  el.querySelectorAll('.ledger__toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('is-open', !open);
+    });
+  });
+})();
+
+/* ---- hero slideshow ---- */
+(function(){
+  const PHOTOS = [
+    ['hero-1','Reviewing the field sheet before collection','center 34%'],
+    ['hero-2','Setting up at the south shore site','center 32%'],
+    ['hero-3','Collecting surface grab samples','center 34%'],
+    ['hero-4','Logging samples at the water\u2019s edge','center 34%'],
+    ['hero-5','Counting particles under the microscope','center 32%']
+  ];
+  const slides = document.getElementById('slides'),
+        dots = document.getElementById('dots'),
+        cap = document.getElementById('cap');
+  PHOTOS.forEach((p,i)=>{
+    const d=document.createElement('div');
+    d.className='hero__slide'+(i?'':' is-on');
+    d.innerHTML='<img src="'+p[0]+'.jpg" srcset="'+p[0]+'-sm.jpg 1400w, '+p[0]+'.jpg 2400w" sizes="100vw" alt="'+p[1]+'" style="object-position:'+(p[2]||'center 36%')+'" '+(i?'loading="lazy"':'fetchpriority="high"')+'>';
+    slides.appendChild(d);
+    const b=document.createElement('button');
+    b.setAttribute('aria-label','Photo '+(i+1)+': '+p[1]);
+    b.setAttribute('aria-current', i?'false':'true');
+    b.addEventListener('click',()=>go(i,true));
+    dots.appendChild(b);
+  });
+  const els=[...slides.children], btns=[...dots.children];
+  let cur=0, timer=null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  cap.textContent = PHOTOS[0][1];
+  function go(i,manual){
+    els[cur].classList.remove('is-on'); btns[cur].setAttribute('aria-current','false');
+    cur=(i+els.length)%els.length;
+    els[cur].classList.add('is-on'); btns[cur].setAttribute('aria-current','true');
+    cap.textContent = PHOTOS[cur][1];
+    if(manual) restart();
+  }
+  function restart(){ if(reduce) return; clearInterval(timer); timer=setInterval(()=>go(cur+1),6000); }
+  restart();
+  document.addEventListener('visibilitychange',()=>document.hidden?clearInterval(timer):restart());
+})();
+
+/* ---- mobile nav ---- */
+(function(){
+  const b=document.getElementById('burger'), n=document.getElementById('nav');
+  b.addEventListener('click',()=>{
+    const open=n.classList.toggle('open');
+    b.setAttribute('aria-expanded',open);
+  });
+  n.addEventListener('click',e=>{ if(e.target.tagName==='A'){n.classList.remove('open');b.setAttribute('aria-expanded','false');} });
+})();
+</script>
+</body>
+</html>
